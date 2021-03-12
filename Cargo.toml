@@ -1,0 +1,14 @@
+[package]
+name = "tuli"
+version = "0.1.0"
+authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
+edition = "2018"
+keywords = ["server", "static", "serve static", "static files"]
+
+[lib]
+name = "tuli_lib"
+path = "src/lib/lib.rs"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
