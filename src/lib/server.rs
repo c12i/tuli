@@ -22,11 +22,7 @@ impl Default for Server {
 impl Server {
     fn read_file(&self, file_path: &str) -> Option<String> {
         let path = format!("{}/{}", self.public_path, file_path);
-
-        match fs::read(path) {
-            Ok(d) => String::from_utf8(d).ok(),
-            _ => Some(String::from("oops...")),
-        }
+        fs::read_to_string(path).ok()
     }
 
     /// The main request handler method.
