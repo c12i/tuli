@@ -19,13 +19,6 @@ impl Response {
             None => "",
         };
 
-        println!(
-            "HTTP/1.1 {} {}\r\n\r\n{}",
-            self.status,
-            self.status.reason_phrase(),
-            body
-        );
-
         // write to Tcp stream
         write!(
             stream,
