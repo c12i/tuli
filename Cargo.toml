@@ -1,6 +1,6 @@
 [package]
 name = "tuli"
-version = "0.1.0"
+version = "0.1.1"
 description = "An experimental local server for serving static files that sort of works (Do not use, very experimental)"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
