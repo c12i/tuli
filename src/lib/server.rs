@@ -6,8 +6,8 @@ const BUFFER_SIZE: usize = 16 * 1024;
 
 #[derive(Debug)]
 pub struct Server {
-    port: u16,
-    public_path: String,
+    pub port: u16,
+    pub public_path: String,
 }
 
 impl Default for Server {
@@ -70,7 +70,6 @@ impl Server {
                     let mut buffer = [0; BUFFER_SIZE];
                     match stream.read(&mut buffer) {
                         Ok(_) => {
-                            println!("Received a request: {}", String::from_utf8_lossy(&buffer));
                             let response = match Request::try_from(&buffer[..]) {
                                 Ok(request) => self.handle_request(&request),
                                 Err(err) => self.handle_bad_request(&err),
