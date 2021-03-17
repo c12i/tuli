@@ -2,3 +2,4 @@
 /.vscode
 /.idea
 /public
+.DS_Store
