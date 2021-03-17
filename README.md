@@ -1,8 +1,20 @@
 # tuli
 
-An experimental local server for serving static files that sort of works
+<p>
+    <a href="https://crates.io/crates/tuli" target="_blank">
+        <img alt="Version" src="https://img.shields.io/crates/v/tuli" />
+   </a>
+</p>
+
+An experimental local server for serving static files that sort of works (Do not use, very experimental)
 
 ## Usage
+
+Install (requires cargo):
+
+```shell
+cargo install tuli
+```
 
 Basic usage:
 

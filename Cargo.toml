@@ -1,9 +1,13 @@
 [package]
 name = "tuli"
 version = "0.1.0"
+description = "An experimental local server for serving static files that sort of works (Do not use, very experimental)"
 authors = ["Collins Muriuki <murerwacollins@gmail.com>"]
 edition = "2018"
-keywords = ["server", "static", "serve static", "static files"]
+keywords = ["server", "static", "serve_static", "static_files"]
+repository = "https://github.com/collinsmuriuki/tuli"
+readme = "README.md"
+license = "MIT"
 
 [lib]
 name = "tuli_lib"
