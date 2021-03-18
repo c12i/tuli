@@ -6,11 +6,25 @@ use super::status::StatusCode;
 pub struct Response {
     status: StatusCode,
     body: Option<String>,
+    chunks: Option<Vec<u8>>,
 }
 
 impl Response {
     pub fn new(status: StatusCode, body: Option<String>) -> Self {
-        Response { status, body }
+        Response {
+            status,
+            body,
+            chunks: None,
+        }
+    }
+
+    #[allow(unused)]
+    pub fn from_chunks(status: StatusCode, chunks: Option<Vec<u8>>) -> Self {
+        Response {
+            status,
+            body: None,
+            chunks,
+        }
     }
 
     pub fn send<T: Write>(&self, stream: &mut T) -> IoResult<()> {

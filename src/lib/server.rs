@@ -1,6 +1,10 @@
-use std::{convert::TryFrom, fs, io::Read, net::TcpListener};
+use std::convert::TryFrom;
+use std::fs::{self, File};
+use std::io::{Read, Write};
+use std::net::TcpListener;
 
 use crate::http::{Method, ParseError, Request, Response, StatusCode};
+use chunked_transfer::Encoder;
 
 const BUFFER_SIZE: usize = 16 * 1024;
 
@@ -20,9 +24,27 @@ impl Default for Server {
 }
 
 impl Server {
-    fn read_file(&self, file_path: &str) -> Option<String> {
+    fn read_text(&self, file_path: &str) -> Option<String> {
         let path = format!("{}/{}", self.public_path, file_path);
         fs::read_to_string(path).ok()
+    }
+
+    #[allow(unused)]
+    fn read_file(&self, file_path: &str) -> Option<Vec<u8>> {
+        let path = format!("{}/{}", self.public_path, file_path);
+
+        let mut buf = Vec::new();
+        let mut file = File::open(&path).ok()?;
+
+        file.read_to_end(&mut buf).ok()?;
+
+        let mut encoded = Vec::new();
+        {
+            // let mut encoder
+            let mut encoder = Encoder::with_chunks_size(&mut encoded, 8);
+            encoder.write_all(&buf).ok()?;
+        }
+        Some(encoded)
     }
 
     /// The main request handler method.
@@ -30,17 +52,15 @@ impl Server {
     fn handle_request(&mut self, request: &Request) -> Response {
         match request.method() {
             Method::GET => match request.path() {
-                "/" => Response::new(StatusCode::Ok, self.read_file("index.html")),
-                path => match self.read_file(path) {
+                "/" => Response::new(StatusCode::Ok, self.read_text("index.html")),
+                path => match self.read_text(path) {
                     Some(contents) => Response::new(StatusCode::Ok, Some(contents)),
                     None => Response::new(StatusCode::NotFound, None),
                 },
             },
             _ => Response::new(
                 StatusCode::NotFound,
-                Some(String::from(
-                    "Could not find a index.html file in this dir...",
-                )),
+                Some(String::from("Requested resource could not be found")),
             ),
         }
     }
@@ -70,8 +90,10 @@ impl Server {
                     let mut buffer = [0; BUFFER_SIZE];
                     match stream.read(&mut buffer) {
                         Ok(_) => {
-                            let response = match Request::try_from(&buffer[..]) {
-                                Ok(request) => self.handle_request(&request),
+                            let request = Request::try_from(&buffer[..]);
+
+                            let response = match request {
+                                Ok(req) => self.handle_request(&req),
                                 Err(err) => self.handle_bad_request(&err),
                             };
 
